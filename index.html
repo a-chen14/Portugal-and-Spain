@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portugal &amp; Spain — August 2026</title>
+  <style>
+    :root {
+      --red:       #CC0000;
+      --red-light: #FF6666;
+      --black:     #121212;
+      --white:     #FFFFFF;
+      --text:      #333333;
+      --muted:     #717171;
+      --stroke:    #D8D8D8;
+      --bg-light:  #F9F9F9;
+      --success:   #07C29F;
+      --success-bg:#DAF2ED;
+      --warn-bg:   #FEF7E8;
+      --err-bg:    #F2DFD8;
+      --shadow:    0 4px 24px rgba(0,0,0,0.07);
+      --font:      Arial, Helvetica, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: auto; }
+    body {
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 24px;
+      color: var(--text);
+      background: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--black);
+      color: var(--white);
+      padding: 36px 20px 28px;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      font-size: 10px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--red-light); margin-bottom: 6px;
+    }
+    .hero h1 {
+      font-size: clamp(22px, 6vw, 38px);
+      font-weight: 700; line-height: 1.2; color: var(--white); margin-bottom: 6px;
+    }
+    .hero-sub { font-size: 13px; color: #aaa; line-height: 20px; }
+
+    /* ── NAV ── */
+    /* The nav sits at the top of the page (not fixed).
+       Each tab is a plain <a href="#sectionid"> — zero JS needed. */
+    .nav {
+      background: var(--bg-light);
+      border-bottom: 1px solid var(--stroke);
+      display: flex;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .nav::-webkit-scrollbar { display: none; }
+    .nav a {
+      display: inline-flex; align-items: center;
+      padding: 0 16px; height: 48px;
+      font-family: var(--font); font-size: 13px; font-weight: 700;
+      color: var(--muted); white-space: nowrap; text-decoration: none;
+      border-bottom: 3px solid transparent;
+      flex-shrink: 0;
+    }
+    .nav a:hover { color: var(--text); }
+
+    /* ── SECTIONS ── */
+    /* All sections visible — user just scrolls.
+       No show/hide needed: scrolling is the most reliable mobile nav. */
+    section {
+      padding: 28px 16px 8px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    section + section { border-top: 1px solid var(--stroke); }
+
+    /* ── HEADINGS ── */
+    .eyebrow {
+      font-size: 10px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--red); margin-bottom: 4px;
+    }
+    .section-title {
+      font-size: clamp(18px, 4vw, 24px); font-weight: 700;
+      color: var(--black); margin-bottom: 20px; line-height: 1.3;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--white); border: 1px solid var(--stroke);
+      border-radius: 8px; box-shadow: var(--shadow);
+      margin-bottom: 16px; overflow: hidden;
+    }
+    .card-head {
+      background: var(--bg-light); border-bottom: 1px solid var(--stroke);
+      padding: 10px 16px; display: flex; align-items: baseline; gap: 12px;
+    }
+    .card-date {
+      font-size: 10px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--red); flex-shrink: 0;
+    }
+    .card-title { font-size: 15px; font-weight: 700; color: var(--black); }
+    .card-body { padding: 4px 16px 8px; }
+
+    /* ── TIMELINE ── */
+    .tl { list-style: none; }
+    .tl li {
+      display: flex; gap: 10px;
+      padding: 8px 0; border-bottom: 1px solid var(--bg-light);
+      align-items: flex-start;
+    }
+    .tl li:last-child { border-bottom: none; }
+    .tl-time {
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      min-width: 40px; text-align: right; flex-shrink: 0; padding-top: 2px;
+    }
+    .tl-dot {
+      width: 9px; height: 9px; border-radius: 50%;
+      background: #ccc; flex-shrink: 0; margin-top: 5px;
+    }
+    .tl li.hi  .tl-dot,
+    .tl li.eat .tl-dot { background: var(--red); }
+    .tl-body { flex: 1; min-width: 0; }
+    .tl-label {
+      font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.3;
+    }
+    .tl-label a { color: inherit; text-decoration: underline; text-decoration-color: #ccc; }
+    .tl-label a:hover { color: var(--red); }
+    .tl-note { font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+
+    /* ── TAGS ── */
+    .tag {
+      display: inline-block; font-size: 9px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .07em;
+      padding: 2px 6px; border-radius: 3px; margin-left: 6px;
+      vertical-align: middle; white-space: nowrap;
+    }
+    .tag-ok  { background: var(--success-bg); color: #066855; }
+    .tag-eat { background: var(--err-bg);     color: var(--red); }
+    .tag-bk  { background: var(--warn-bg);    color: #7a5e00; }
+
+    /* ── INFO GRID ── */
+    .grid2 {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;
+    }
+    @media (max-width: 600px) { .grid2 { grid-template-columns: 1fr; } }
+
+    .info-card {
+      background: var(--white); border: 1px solid var(--stroke);
+      border-radius: 8px; padding: 16px; box-shadow: var(--shadow);
+    }
+    .info-card-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--red); margin-bottom: 6px;
+    }
+    .info-card-title { font-size: 15px; font-weight: 700; color: var(--black); margin-bottom: 8px; }
+    .info-row {
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2px;
+      padding: 4px 0; border-bottom: 1px solid var(--bg-light); font-size: 13px;
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-key { color: var(--muted); }
+    .info-val { font-weight: 700; color: var(--text); }
+
+    /* ── FLIGHT DISPLAY ── */
+    .flight-route { display: flex; align-items: center; gap: 8px; margin: 8px 0; }
+    .airport { font-size: 20px; font-weight: 700; color: var(--black); }
+    .arrow { flex: 1; height: 1px; background: var(--stroke); position: relative; }
+    .arrow::after {
+      content: ''; position: absolute; right: 0; top: -4px;
+      border: 5px solid transparent; border-left: 7px solid var(--stroke);
+    }
+    .flight-times { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
+
+    /* ── CHECKLIST ── */
+    .checklist { list-style: none; }
+    .checklist li {
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 7px 0; border-bottom: 1px solid var(--bg-light); font-size: 13px;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .cb {
+      width: 18px; height: 18px; border: 2px solid #ccc;
+      border-radius: 3px; flex-shrink: 0; margin-top: 1px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cb.on  { background: var(--success); border-color: var(--success); }
+    .cb.on::after {
+      content: ''; display: block; width: 5px; height: 9px;
+      border: 2px solid white; border-top: none; border-left: none;
+      transform: rotate(45deg) translate(-1px,-1px);
+    }
+    .cb.pd { border-color: #F1C21B; }
+    .cl-label { flex: 1; color: var(--text); line-height: 1.4; }
+    .cl-label a { color: inherit; text-decoration: underline; text-decoration-color: #ccc; }
+    .cl-status { font-size: 11px; font-weight: 700; flex-shrink: 0; }
+    .s-ok { color: var(--success); }
+    .s-pd { color: #7a5e00; }
+
+    /* ── APPS ── */
+    /* ── Weather bar ── */
+    .weather-bar {
+      font-size: 13px;
+      line-height: 1.4;
+      color: var(--muted);
+      margin: -8px 0 14px;
+      padding: 5px 10px;
+      background: #FFF9EC;
+      border-left: 3px solid #F1C21B;
+      border-radius: 0 4px 4px 0;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px 8px;
+    }
+    .weather-bar strong { color: var(--text); font-size: 13px; }
+    .weather-bar a { color: var(--muted); }
+    .weather-note { color: var(--muted); font-size: 12px; }
+    @media (max-width: 480px) {
+      .weather-bar { font-size: 12px; padding: 5px 8px; }
+      .weather-bar strong { font-size: 13px; }
+      .weather-note { font-size: 12px; }
+    }
+
+    .apps { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .app-pill {
+      background: var(--bg-light); border: 1px solid var(--stroke);
+      border-radius: 20px; padding: 6px 14px;
+      font-size: 13px; font-weight: 700; color: var(--text);
+    }
+
+    /* ── FOOTER SPACE ── */
+    .end-space { height: 48px; }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <p class="hero-eyebrow">Trip Guide</p>
+  <h1>Portugal &amp; Spain</h1>
+  <p class="hero-sub">Aug 18&ndash;27, 2026 &nbsp;&middot;&nbsp; Lisbon &middot; Sintra &middot; Cascais &middot; Madrid &middot; Toledo &middot; Segovia</p>
+</div>
+
+<nav class="nav">
+  <a href="#flights">Flights</a>
+  <a href="#lisbon">Lisbon</a>
+  <a href="#sintra">Sintra</a>
+  <a href="#cascais">Cascais</a>
+  <a href="#madrid">Madrid</a>
+  <a href="#daytrips">Day Trips</a>
+  <a href="#checklist">Checklist</a>
+  <a href="#logistics">Logistics</a>
+</nav>
+
+<!-- ═══════════ FLIGHTS ═══════════ -->
+<section id="flights">
+  <p class="eyebrow">Travel</p>
+  <h2 class="section-title">Flights &amp; Lodging</h2>
+  <div class="grid2">
+    <div class="info-card">
+      <p class="info-card-label">Outbound &mdash; Aug 18</p>
+      <p class="info-card-title">TAP TP216</p>
+      <div class="flight-route">
+        <span class="airport">BOS</span><div class="arrow"></div><span class="airport">LIS</span>
+      </div>
+      <div class="flight-times"><span>Depart 22:45</span><span>Arrive 10:20 (Aug 19)</span></div>
+    </div>
+    <div class="info-card">
+      <p class="info-card-label">Lisbon &rarr; Madrid &mdash; Aug 23</p>
+      <p class="info-card-title">TAP TP1014</p>
+      <div class="flight-route">
+        <span class="airport">LIS</span><div class="arrow"></div><span class="airport">MAD</span>
+      </div>
+      <div class="flight-times"><span>Depart 13:00</span><span>Arrive 15:20</span></div>
+    </div>
+    <div class="info-card">
+      <p class="info-card-label">Return &mdash; Aug 27</p>
+      <p class="info-card-title">AY5369</p>
+      <div class="flight-route">
+        <span class="airport">MAD</span><div class="arrow"></div><span class="airport">BOS</span>
+      </div>
+      <div class="flight-times"><span>Depart 17:30</span><span>Arrive 19:50</span></div>
+    </div>
+    <div class="info-card">
+      <p class="info-card-label">Mobile Data</p>
+      <p class="info-card-title">Verizon Travel Pass</p>
+      <div class="info-row"><span class="info-key">Activate</span><span class="info-val">On arrival in Lisbon</span></div>
+      <div class="info-row"><span class="info-key">Coverage</span><span class="info-val">Portugal &amp; Spain</span></div>
+    </div>
+  </div>
+  <p class="eyebrow">Accommodation</p>
+  <h2 class="section-title">Where We're Staying</h2>
+  <div class="grid2">
+    <div class="info-card">
+      <p class="info-card-label">Lisbon &mdash; Aug 19&ndash;23</p>
+      <p class="info-card-title">Chiado Airbnb</p>
+      <div class="info-row"><span class="info-key">Address</span><span class="info-val">Rua Rodrigues Sampaio 28</span></div>
+      <div class="info-row"><span class="info-key">Postcode</span><span class="info-val">1150-220 Lisbon</span></div>
+      <div class="info-row"><span class="info-key">Check-in</span><span class="info-val">Aug 19 ~13:00</span></div>
+    </div>
+    <div class="info-card">
+      <p class="info-card-label">Madrid &mdash; Aug 23&ndash;27</p>
+      <p class="info-card-title">Sol/Ópera Airbnb</p>
+      <div class="info-row"><span class="info-key">Address</span><span class="info-val">Calle del Espejo 6, 3 Izquierda</span></div>
+      <div class="info-row"><span class="info-key">Postcode</span><span class="info-val">28013 Madrid</span></div>
+      <div class="info-row"><span class="info-key">Check-in</span><span class="info-val">Aug 23 ~17:00</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ LISBON DAY 1 ═══════════ -->
+<section id="lisbon">
+  <p class="eyebrow">Aug 19</p>
+  <h2 class="section-title">Arrival in Lisbon</h2>
+  <div class="card">
+    <div class="card-body">
+      <ul class="tl">
+        <li style="background:#FFF9EC;border-bottom:1px solid #F1C21B44;padding:6px 4px;"><span class="tl-time" style="min-width:40px;font-size:10px;"></span><div class="tl-dot" style="background:#F1C21B;flex-shrink:0;"></div><div class="tl-body"><p class="tl-label" style="font-size:12px;font-weight:400;color:#717171;"><strong style="color:#333;font-weight:700;">☀️ 85°F / 67°F</strong> &nbsp;·&nbsp; Sunny — perfect arrival day</p></div></li>
+        <li class="hi"><span class="tl-time">10:20</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Land at LIS</p><p class="tl-note">Passport control, collect bags</p></div></li>
+        <li><span class="tl-time">11:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Bolt/Uber to Airbnb</p><p class="tl-note">Rua Rodrigues Sampaio 28 — ~25 min from airport; drop bags if early</p></div></li>
+        <li class="eat"><span class="tl-time">12:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Lunch — <a href="https://www.opentable.com/r/avenida-restaurant-and-bar-lisboa" target="_blank" rel="noopener">Avenida Restaurant &amp; Bar</a> <span class="tag tag-ok">Booked 12:30</span></p><p class="tl-note">Rua de Santa Marta 25 — 2-min walk from Airbnb</p></div></li>
+        <li><span class="tl-time">13:45</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Aldi grocery run</p><p class="tl-note">Stock up on snacks, drinks, and breakfast items for the Airbnb</p></div></li>
+        <li><span class="tl-time">15:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Check in to Airbnb</p><p class="tl-note">Rua Rodrigues Sampaio 28</p></div></li>
+        <li><span class="tl-time">15:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">💤 Naptime</p><p class="tl-note">Well earned after an overnight flight — back up at 17:00</p></div></li>
+        <li><span class="tl-time">17:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Uber to Príncipe Real</p><p class="tl-note">~5 min, ~€6 from Airbnb — saves your legs after the overnight flight</p></div></li>
+        <li><span class="tl-time">17:15</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Explore Príncipe Real</p><p class="tl-note">Browse the boutiques, antique dealers, and the lovely garden at Jardim do Príncipe Real — one of Lisbon's most elegant neighbourhoods</p></div></li>
+        <li class="hi"><span class="tl-time">17:45</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://www.golisbon.com/sight-seeing/sao-pedro-alcantara.html" target="_blank" rel="noopener">Miradouro de São Pedro de Alcântara</a></p><p class="tl-note">Diogo rec: sweeping sunset views over the city and castle — kiosk bar on site for a drink while you watch</p></div></li>
+        <li><span class="tl-time">18:15</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Walk downhill through Chiado</p><p class="tl-note">All downhill from here — via Rua do Carmo into Chiado. Stop at <a href="https://www.manteigaria.com/" target="_blank" rel="noopener">Manteigaria</a> for a pastel de nata, and Livraria Bertrand (world's oldest bookstore, est. 1732). Ends naturally near Praça dos Restauradores and Pinóquio.
+          <div style="margin-top:10px;border-radius:6px;overflow:hidden;border:1px solid #D8D8D8;">
+            <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=-9.1512%2C38.7130%2C-9.1380%2C38.7200&layer=mapnik" width="100%" height="200" style="border:0;display:block;" title="Príncipe Real to Chiado walk" loading="lazy"></iframe>
+            <div style="background:#F9F9F9;padding:6px 10px;font-size:11px;color:#717171;">📍 Príncipe Real → Miradouro de São Pedro de Alcântara → Chiado → Pinóquio &nbsp;·&nbsp; <a href="https://www.google.com/maps/dir/Principe+Real+Lisboa/Miradouro+de+Sao+Pedro+de+Alcantara+Lisboa/Chiado+Lisboa/Pra%C3%A7a+dos+Restauradores+Lisboa" target="_blank" rel="noopener" style="color:#CC0000;">Open in Google Maps ↗</a></div>
+          </div>
+        </p></div></li>
+        <li class="eat"><span class="tl-time">19:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Dinner — <a href="https://www.restaurantepinoquio.pt/" target="_blank" rel="noopener">Pinóquio</a> <span class="tag tag-ok">Booked 19:00</span></p><p class="tl-note">Praça dos Restauradores — Diogo rec: great seafood, clams a specialty</p></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="eyebrow">Aug 20</p>
+  <h2 class="section-title">Belém &amp; Alfama</h2>
+  <div class="card">
+    <div class="card-body">
+      <ul class="tl">
+        <li style="background:#FFF9EC;border-bottom:1px solid #F1C21B44;padding:6px 4px;"><span class="tl-time" style="min-width:40px;font-size:10px;"></span><div class="tl-dot" style="background:#F1C21B;flex-shrink:0;"></div><div class="tl-body"><p class="tl-label" style="font-size:12px;font-weight:400;color:#717171;"><strong style="color:#333;font-weight:700;">☀️ 83°F / 67°F</strong> &nbsp;·&nbsp; Sunny — great for Belém and Alfama</p></div></li>
+        <li><span class="tl-time">08:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Tram 15E or Uber to Belém</p><p class="tl-note">Tram 15E: walk ~15 min to Praça do Comércio, board at the waterfront stop, ride ~25 min to Belém. Or Uber/Bolt directly — ~30 min, easier with kids.</p></div></li>
+        <li class="eat"><span class="tl-time">09:15</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Breakfast in Belém</p><p class="tl-note">Including <a href="https://pasteisdebelem.pt/en/" target="_blank" rel="noopener">Pastéis de Belém</a> — where the pastel de nata was invented. Allow 1 hr.</p></div></li>
+        <li class="hi"><span class="tl-time">10:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://www.mosteirojeronimos.gov.pt/en/" target="_blank" rel="noopener">Jerónimos Monastery</a> <span class="tag tag-ok">Booked 10:30</span></p><p class="tl-note">1 hr — stunning Manueline architecture. Out by 11:30.</p></div></li>
+        <li><span class="tl-time">11:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://www.torrebelem.gov.pt/en/" target="_blank" rel="noopener">Belém Tower</a> &amp; <a href="https://www.padraodosdescobrimentos.pt/en/" target="_blank" rel="noopener">Monument to the Discoveries</a></p><p class="tl-note">Exterior only for the Tower — done by 13:00</p></div></li>
+        <li class="eat"><span class="tl-time">13:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Lunch in Belém <span class="tag tag-eat">Decide day-of</span></p><p class="tl-note"><strong>Afonso dos Leitões Belém Food Store</strong> — Portuguese roast suckling pig &nbsp;·&nbsp; or <strong>Otsumami</strong> — Japanese, something completely different</p></div></li>
+        <li><span class="tl-time">14:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Uber/Bolt back to Airbnb</p><p class="tl-note">~30 min from Belém</p></div></li>
+        <li><span class="tl-time">14:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">💤 Rest at Airbnb</p><p class="tl-note">1.5 hrs — recharge before the Alfama evening</p></div></li>
+        <li><span class="tl-time">16:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Uber/Bolt to Castelo de São Jorge</p><p class="tl-note">~15 min from Airbnb</p></div></li>
+        <li class="hi"><span class="tl-time">16:15</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://castelodesaojorge.pt/en/" target="_blank" rel="noopener">Castelo de São Jorge</a> <span class="tag tag-ok">E-ticket booked</span></p><p class="tl-note">Audio Guide included &nbsp;·&nbsp; Ref: <strong>GYGX7NGMQGF6</strong> &nbsp;·&nbsp; 1.5 hrs — out by 17:45</p></div></li>
+        <li><span class="tl-time">17:45</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://www.sé-de-lisboa.pt/" target="_blank" rel="noopener">Lisbon Cathedral (Sé)</a></p><p class="tl-note">5-min walk downhill from the castle — open until 19:00, last entry 18:15. Go now before it closes.</p></div></li>
+        <li><span class="tl-time">18:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Wander Alfama</p><p class="tl-note">~45 min stroll downhill toward Clube de Fado — viewpoints, narrow lanes, street life</p></div></li>
+        <li class="eat"><span class="tl-time">19:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Dinner — <a href="https://www.clubedefado.pt/" target="_blank" rel="noopener">Clube de Fado</a> <span class="tag tag-ok">Booked 19:30</span></p><p class="tl-note">Rua São João da Praça 86–94 — right by the Sé Cathedral; renowned fado house, ~€50/person</p></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ SINTRA ═══════════ -->
+<section id="sintra">
+  <p class="eyebrow">Aug 21</p>
+  <h2 class="section-title">Sintra Day Trip</h2>
+  <div class="card">
+    <div class="card-body">
+      <ul class="tl">
+        <li style="background:#FFF9EC;border-bottom:1px solid #F1C21B44;padding:6px 4px;"><span class="tl-time" style="min-width:40px;font-size:10px;"></span><div class="tl-dot" style="background:#F1C21B;flex-shrink:0;"></div><div class="tl-body"><p class="tl-label" style="font-size:12px;font-weight:400;color:#717171;"><strong style="color:#333;font-weight:700;">☀️ 83°F / 66°F</strong> &nbsp;·&nbsp; Ideal Sintra day — light jacket for the castle ramparts</p></div></li>
+        <li><span class="tl-time">07:45</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Walk to Rossio Station</p><p class="tl-note">~15 min from Chiado Airbnb</p></div></li>
+        <li class="hi"><span class="tl-time">08:11</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Train: Rossio → Sintra</p><p class="tl-note">Buy ticket day-of; ~40 min</p></div></li>
+        <li><span class="tl-time">08:55</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Arrive Sintra — Bolt/Uber to Park entrance</p><p class="tl-note">No private vehicles to Pena — Uber/Bolt to Park gate only, then walk or pay transfer service (~€5) up to Palace</p></div></li>
+        <li class="hi"><span class="tl-time">10:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://www.parquesdesintra.pt/en/parks-monuments/park-and-national-palace-of-pena/" target="_blank" rel="noopener">Pena Palace</a> <span class="tag tag-ok">Booked 10:00</span></p><p class="tl-note">Invoice: <strong>FTR 26001/26366</strong> &nbsp;·&nbsp; 2× Adult (€19.00) + 2× Youth (€17.10) &nbsp;·&nbsp; ⚠️ 10:00 is Palace entry time, not Park entry — arrive at Park entrance by 09:15 to allow 30 min walk up to the Palace. No private vehicles to Pena.</p></div></li>
+        <li class="eat"><span class="tl-time">12:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://www.facebook.com/otascodostrauss" target="_blank" rel="noopener">O Tasco do Strauss</a> <span class="tag tag-eat">Walk-in at noon</span></p><p class="tl-note">Largo dos Aliados 2 &nbsp;·&nbsp; 4.9 on TripAdvisor, top 3 in Sintra &nbsp;·&nbsp; Portuguese tapas, octopus, chorizo, local cheeses &nbsp;·&nbsp; €10–15/person &nbsp;·&nbsp; Arrive at opening to beat the crowds</p></div></li>
+        <li class="hi"><span class="tl-time">13:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://www.parquesdesintra.pt/en/parks-monuments/moorish-castle/" target="_blank" rel="noopener">Moorish Castle</a> <span class="tag tag-ok">E-ticket booked</span></p><p class="tl-note">Invoice: <strong>FTR 26001/26366</strong> &nbsp;·&nbsp; 2× Adult (€11.40) + 1× Youth (€9.50) &nbsp;·&nbsp; Free audioguide at zoomguide.app &nbsp;·&nbsp; No private vehicles — walk from Pena (~20 min) or public transport</p></div></li>
+        <li><span class="tl-time">15:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Train back to Lisbon</p><p class="tl-note">Sintra → Rossio — trains run frequently</p></div></li>
+        <li><span class="tl-time">16:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">💤 Nap at Airbnb</p><p class="tl-note">2.5 hrs — big day on the hills</p></div></li>
+        <li class="eat"><span class="tl-time">19:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Dinner — <a href="https://cafesaobento.com/en/cafe-sao-bento-baixa-lisbon/" target="_blank" rel="noopener">Café de São Bento — Baixa</a> <span class="tag tag-ok">Booked 19:00</span></p><p class="tl-note">Rua do Jardim do Regedor 7, 1150-193 Lisboa &nbsp;·&nbsp; Diogo rec: classic steakhouse, famous for steak and fries</p></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CASCAIS ═══════════ -->
+<section id="cascais">
+  <p class="eyebrow">Aug 22</p>
+  <h2 class="section-title">Cascais Day Trip</h2>
+  <div class="card">
+    <div class="card-body">
+      <ul class="tl">
+        <li style="background:#FFF9EC;border-bottom:1px solid #F1C21B44;padding:6px 4px;"><span class="tl-time" style="min-width:40px;font-size:10px;"></span><div class="tl-dot" style="background:#F1C21B;flex-shrink:0;"></div><div class="tl-body"><p class="tl-label" style="font-size:12px;font-weight:400;color:#717171;"><strong style="color:#333;font-weight:700;">☀️ 82°F / 66°F</strong> &nbsp;·&nbsp; Sunny — good day for Guincho beach</p></div></li>
+        <li><span class="tl-time">09:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Slow morning — coffee &amp; breakfast near Airbnb</p><p class="tl-note">No rush today</p></div></li>
+        <li><span class="tl-time">10:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Train from Cais do Sodré</p><p class="tl-note">Cascais Line — buy day-of; ~40 min</p></div></li>
+        <li><span class="tl-time">11:15</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Arrive Cascais — wander old town</p><p class="tl-note">Diogo rec: explore the historic centre at a relaxed pace</p></div></li>
+        <li><span class="tl-time">12:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Parque Marechal Carmona</p><p class="tl-note">Diogo rec: lovely park — good for kids to run around</p></div></li>
+        <li class="eat"><span class="tl-time">13:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Lunch — Marisco na Praça Marina <span class="tag tag-ok">Booked 13:00</span></p><p class="tl-note">Marina de Cascais &nbsp;·&nbsp; 4 persons &nbsp;·&nbsp; Terrace overlooking sailboats, fresh seafood</p></div></li>
+        <li class="hi"><span class="tl-time">14:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://www.santini.pt/en/" target="_blank" rel="noopener">Santini</a> — ice cream</p><p class="tl-note">Diogo rec: legendary Cascais ice cream institution — perfect post-lunch treat</p></div></li>
+        <li class="hi"><span class="tl-time">15:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://www.visitcascais.com/en/article/boca-do-inferno" target="_blank" rel="noopener">Boca do Inferno</a></p><p class="tl-note">5-min taxi from Santini &nbsp;·&nbsp; Dramatic sea cave and cliffs</p></div></li>
+        <li class="hi"><span class="tl-time">15:45</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Guincho Beach + Bar do Guincho</p><p class="tl-note">Diogo rec: great family beach — stop at <strong>Bar do Guincho</strong> for drinks on the sand &nbsp;·&nbsp; ~10 min taxi from Boca do Inferno &nbsp;·&nbsp; ⚠️ Order taxi by 16:00 to leave by 16:15</p></div></li>
+        <li><span class="tl-time">16:15</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Taxi from Guincho to Cascais station</p><p class="tl-note">~€12–15, ~15 min &nbsp;·&nbsp; Ask Bar do Guincho to call one or use MyTaxi app &nbsp;·&nbsp; Allow 15 min wait time</p></div></li>
+        <li><span class="tl-time">18:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">💤 Nap at Airbnb</p><p class="tl-note">~1 hr — recharge before dinner</p></div></li>
+        <li class="eat"><span class="tl-time">19:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Dinner — <a href="https://www.google.com/maps/search/?api=1&query=Han%20Table%20Barbecue%20-%20Rossio%2C%20Largo%20Regedor%20-%201%2F4%2C%201150-277%20Lisboa" target="_blank" rel="noopener">Han Table Barbecue — Rossio</a> <span class="tag tag-ok">Booked 19:00</span></p><p class="tl-note">Largo Regedor 1/4, 1150-277 Lisboa &nbsp;·&nbsp; 4 persons &nbsp;·&nbsp; Korean BBQ tableside grill</p></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ MADRID ═══════════ -->
+<section id="madrid">
+  <p class="eyebrow">Aug 23</p>
+  <h2 class="section-title">Arrival in Madrid</h2>
+  <div class="card">
+    <div class="card-body">
+      <ul class="tl">
+        <li style="background:#FFF9EC;border-bottom:1px solid #F1C21B44;padding:6px 4px;"><span class="tl-time" style="min-width:40px;font-size:10px;"></span><div class="tl-dot" style="background:#F1C21B;flex-shrink:0;"></div><div class="tl-body"><p class="tl-label" style="font-size:12px;font-weight:400;color:#717171;"><strong style="color:#333;font-weight:700;">☀️ 89°F / 63°F</strong> &nbsp;·&nbsp; Sunny and warm — hot Madrid arrival</p></div></li>
+        <li><span class="tl-time">10:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Head to Lisbon airport</p><p class="tl-note">Allow 45 min + 2 hrs before departure</p></div></li>
+        <li class="hi"><span class="tl-time">13:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Depart LIS → MAD (TP1014)</p></div></li>
+        <li><span class="tl-time">15:20</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Arrive MAD — Bolt/Uber to Airbnb</p><p class="tl-note">Calle del Espejo 6, 3 Izquierda — ~30 min from T4</p></div></li>
+        <li><span class="tl-time">16:45</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Evening stroll — Plaza Mayor &amp; Puerta del Sol</p><p class="tl-note">3-min walk from Airbnb &nbsp;·&nbsp; Plaza Mayor: grab a bocata de calamares at one of the eastern arch bars &nbsp;·&nbsp; Mercado de San Miguel (1 min from Plaza Mayor) for a glass of wine &nbsp;·&nbsp; Puerta del Sol: see the Bear and Strawberry Tree statue and Kilometre Zero</p></div></li>
+        <li class="hi"><span class="tl-time">17:45</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://www.esmadrid.com/en/tourist-information/parque-del-retiro" target="_blank" rel="noopener">Retiro Park</a></p><p class="tl-note">Metro from Sol: Line 2 (red) 2 stops east to Retiro station — ~5 min, €1.50/person &nbsp;·&nbsp; Rowboats on the lake until ~20:00 &nbsp;·&nbsp; Palacio de Cristal &nbsp;·&nbsp; Walk 5 min to La Maruca when done</p></div></li>
+        <li class="eat"><span class="tl-time">20:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Dinner — <a href="https://www.grupocañadio.es/restaurantes/la-maruca-velazquez/" target="_blank" rel="noopener">La Maruca Velázquez</a> <span class="tag tag-ok">Booked 20:00</span></p><p class="tl-note">5-min walk from Retiro &nbsp;·&nbsp; Mesa Baja &nbsp;·&nbsp; 4 personas &nbsp;·&nbsp; Modern Cantabrian cooking, excellent tortilla</p></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="eyebrow">Aug 24</p>
+  <h2 class="section-title">Royal Madrid</h2>
+  <div class="card">
+    <div class="card-body">
+      <ul class="tl">
+        <li style="background:#FFF9EC;border-bottom:1px solid #F1C21B44;padding:6px 4px;"><span class="tl-time" style="min-width:40px;font-size:10px;"></span><div class="tl-dot" style="background:#F1C21B;flex-shrink:0;"></div><div class="tl-body"><p class="tl-label" style="font-size:12px;font-weight:400;color:#717171;"><strong style="color:#333;font-weight:700;">☀️ 85°F / 63°F</strong> &nbsp;·&nbsp; Sunny — comfortable for walking the city</p></div></li>
+        <li class="hi"><span class="tl-time">09:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://entradas.patrimonionacional.es/en-GB/informacion-recinto/6/palacio-real-de-madrid" target="_blank" rel="noopener">Royal Palace of Madrid</a> <span class="tag tag-ok">Booked</span></p><p class="tl-note">~1.5 hrs; largest royal palace in W. Europe</p></div></li>
+        <li><span class="tl-time">11:15</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://catedraldelaalmudena.es/en/" target="_blank" rel="noopener">Almudena Cathedral</a></p><p class="tl-note">Just outside the palace; free entry</p></div></li>
+        <li><span class="tl-time">12:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Plaza de Oriente &amp; gardens</p></div></li>
+        <li class="eat"><span class="tl-time">13:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Lunch — Mercado de San Miguel <span class="tag tag-eat">No booking needed</span></p><p class="tl-note">Colleague rec: gourmet food market right by Plaza Mayor — great for grazing on pintxos, jamón, oysters</p></div></li>
+        <li class="hi"><span class="tl-time">14:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Gran Vía stroll</p><p class="tl-note">5-min walk north from Mercado de San Miguel &nbsp;·&nbsp; Start at <strong>Edificio Metropolis</strong> (eastern end, silver dome) and walk west &nbsp;·&nbsp; Stop at <strong>Azotea de Gran Vía</strong> hotel rooftop bar for a drink with views &nbsp;·&nbsp; Allow 1 hr &nbsp;·&nbsp; Then metro or 15-min walk south to the Prado</p></div></li>
+        <li class="hi"><span class="tl-time">15:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://www.museodelprado.es/en/visit-the-museum" target="_blank" rel="noopener">Prado Museum</a> <span class="tag tag-ok">Booked 15:00</span></p><p class="tl-note">⚠️ Must arrive by 15:30 — timed entry window &nbsp;·&nbsp; Velázquez, Goya, Bosch &nbsp;·&nbsp; Allow ~1.5 hrs &nbsp;·&nbsp; Under-18s free but still need a timed ticket</p></div></li>
+        <li><span class="tl-time">17:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">💤 Siesta — back to Airbnb</p><p class="tl-note">Rest up before the evening — Calle del Espejo is a short taxi from the Prado</p></div></li>
+        <li><span class="tl-time">19:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Pre-dinner drinks — Casa Suecia rooftop</p><p class="tl-note">Colleague rec: nice rooftop terrace, good for sunset drinks</p></div></li>
+        <li class="eat"><span class="tl-time">20:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Dinner — <a href="https://www.instagram.com/shanghailaoshengjian/" target="_blank" rel="noopener">Shanghai Sheng Jian Bao</a> <span class="tag tag-ok">No reservation needed</span></p><p class="tl-note">Chinese — pan-fried soup dumplings</p></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ DAY TRIPS ═══════════ -->
+<section id="daytrips">
+  <p class="eyebrow">Aug 25</p>
+  <h2 class="section-title">Toledo</h2>
+  <div class="card">
+    <div class="card-body">
+      <ul class="tl">
+        <li style="background:#FFF9EC;border-bottom:1px solid #F1C21B44;padding:6px 4px;"><span class="tl-time" style="min-width:40px;font-size:10px;"></span><div class="tl-dot" style="background:#F1C21B;flex-shrink:0;"></div><div class="tl-body"><p class="tl-label" style="font-size:12px;font-weight:400;color:#717171;"><strong style="color:#333;font-weight:700;">☀️ 87°F / 62°F</strong> &nbsp;·&nbsp; Sunny — hot Toledo day, bring water</p></div></li>
+        <li><span class="tl-time">08:45</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Bolt/Uber to Atocha Station</p><p class="tl-note">Full name: Madrid-Puerta de Atocha-Almudena Grandes</p></div></li>
+        <li class="hi"><span class="tl-time">09:15</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://www.renfe.com/en/index.html" target="_blank" rel="noopener">AVE: Atocha → Toledo</a> <span class="tag tag-ok">Booked</span></p><p class="tl-note">Route <strong>08292</strong> &nbsp;·&nbsp; Arrives Toledo 09:49 (34 min)</p></div></li>
+        <li><span class="tl-time">09:49</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Bolt to Toledo Cathedral</p><p class="tl-note">~10 min from Toledo station to the old city — arrive by 10:00 to get oriented before your ticket time</p></div></li>
+        <li class="hi"><span class="tl-time">10:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://www.catedralprimada.es/en/" target="_blank" rel="noopener">Toledo Cathedral</a> <span class="tag tag-ok">Booked 10:30</span></p><p class="tl-note">Allow ~1 hr; one of Spain's finest Gothic cathedrals</p></div></li>
+        <li><span class="tl-time">11:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://toledomonumental.com/en/monument-santo-tome-church/" target="_blank" rel="noopener">Santo Tomé Church</a></p><p class="tl-note">~20 min &nbsp;·&nbsp; €2.80 — home to El Greco's masterpiece "The Burial of the Count of Orgaz", one of the top 5 paintings in Spanish art history</p></div></li>
+        <li><span class="tl-time">11:50</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://www.culturaydeporte.gob.es/msefarad/visita.html" target="_blank" rel="noopener">Sinagoga del Tránsito / Museo Sefardí</a></p><p class="tl-note">~40 min &nbsp;·&nbsp; Stunning 14th-century synagogue with intricate Mudéjar stucco — right in the Jewish Quarter, a short walk from Santo Tomé</p></div></li>
+        <li class="eat"><span class="tl-time">12:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Lunch — <a href="https://www.tripadvisor.com/Restaurant_Review-g187489-d8618804-Reviews-Lo_Nuestro_Taperia_Restaurante-Toledo_Province_of_Toledo_Castile_La_Mancha.html" target="_blank" rel="noopener">Lo Nuestro Taperia &amp; Restaurante</a> <span class="tag tag-ok">Booked 12:30</span></p><p class="tl-note">Calle San Juan de Dios 7 — in the Jewish Quarter &nbsp;·&nbsp; Carcamusas, torreznos, ox tail stew &nbsp;·&nbsp; Warm family-run spot &nbsp;·&nbsp; 90 min</p></div></li>
+        <li><span class="tl-time">14:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://www.ejercito.defensa.gob.es/museo/alcazar-toledo.html" target="_blank" rel="noopener">Alcázar de Toledo</a></p><p class="tl-note">Hilltop fortress; Army Museum — fully indoors, air conditioned. Allow ~1.5 hrs. Last entry 16:00.</p></div></li>
+        <li><span class="tl-time">16:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Wander Toledo / head to station</p><p class="tl-note">Bolt back to Toledo station — ~10 min</p></div></li>
+        <li><span class="tl-time">17:23</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://www.renfe.com/en/index.html" target="_blank" rel="noopener">AVE: Toledo → Atocha</a> <span class="tag tag-ok">Booked</span></p><p class="tl-note">Route <strong>08173</strong> &nbsp;·&nbsp; Arrives Madrid Atocha 17:57 (34 min)</p></div></li>
+        <li><span class="tl-time">17:57</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Bolt/Uber back to Airbnb</p><p class="tl-note">~15 min from Atocha to Calle del Espejo</p></div></li>
+        <li><span class="tl-time">18:15</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">💤 Rest at Airbnb</p><p class="tl-note">~1.5 hrs — recharge before dinner</p></div></li>
+        <li class="eat"><span class="tl-time">20:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Dinner — <a href="https://www.restaurantelagiralda.com/" target="_blank" rel="noopener">La Giralda</a> <span class="tag tag-ok">Booked 20:00</span></p><p class="tl-note">4 personas &nbsp;·&nbsp; Reserva: Hank Chen &nbsp;·&nbsp; ⚠️ No dairy noted on reservation</p></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="eyebrow">Aug 26</p>
+  <h2 class="section-title">Segovia</h2>
+  <div class="card">
+    <div class="card-body">
+      <ul class="tl">
+        <li style="background:#FFF9EC;border-bottom:1px solid #F1C21B44;padding:6px 4px;"><span class="tl-time" style="min-width:40px;font-size:10px;"></span><div class="tl-dot" style="background:#F1C21B;flex-shrink:0;"></div><div class="tl-body"><p class="tl-label" style="font-size:12px;font-weight:400;color:#717171;"><strong style="color:#333;font-weight:700;">☀️ 87°F / 63°F</strong> &nbsp;·&nbsp; Sunny — Segovia slightly cooler than Madrid</p></div></li>
+        <li><span class="tl-time">08:50</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Bolt/Uber to Chamartín Station</p><p class="tl-note">Full name: Madrid-Chamartín-Clara Campoamor</p></div></li>
+        <li class="hi"><span class="tl-time">09:25</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://www.renfe.com/en/index.html" target="_blank" rel="noopener">AVE: Chamartín → Segovia</a> <span class="tag tag-ok">Booked</span></p><p class="tl-note">Route <strong>34763</strong> &nbsp;·&nbsp; Arrives Segovia-Guiomar 09:51 (26 min)</p></div></li>
+        <li><span class="tl-time">09:51</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Taxi to Alcázar de Segovia</p><p class="tl-note">~15 min from Guiomar station — taxi most reliable, Uber/Bolt limited in Segovia</p></div></li>
+        <li class="hi"><span class="tl-time">10:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://www.alcazardesegovia.com/en/" target="_blank" rel="noopener">Alcázar de Segovia</a> <span class="tag tag-ok">Booked — entry before 10:30</span></p><p class="tl-note">Start at the far western end while legs are fresh &nbsp;·&nbsp; Allow ~1.5 hrs &nbsp;·&nbsp; Tower views over the city</p></div></li>
+        <li><span class="tl-time">11:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://tickets.catedralsegovia.es/en/" target="_blank" rel="noopener">Segovia Cathedral</a></p><p class="tl-note">~10 min walk east from the Alcázar &nbsp;·&nbsp; Last Gothic cathedral built in Spain &nbsp;·&nbsp; Allow ~45 min</p></div></li>
+        <li class="hi"><span class="tl-time">12:15</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://www.turismodesegovia.com/en/que-ver/monumentos/acueducto/" target="_blank" rel="noopener">Roman Aqueduct</a></p><p class="tl-note">~10 min walk east from the Cathedral &nbsp;·&nbsp; 2,000-year-old aqueduct, free to view &nbsp;·&nbsp; Best from Plaza del Azoguejo &nbsp;·&nbsp; ~15 min</p></div></li>
+        <li class="eat"><span class="tl-time">13:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Lunch — <a href="https://www.mesondecandido.es/en/" target="_blank" rel="noopener">Mesón de Cándido</a> <span class="tag tag-ok">Booked</span></p><p class="tl-note">Plaza del Azoguejo 5 — right under the aqueduct &nbsp;·&nbsp; Since 1786 &nbsp;·&nbsp; Cochinillo carved with a plate edge &nbsp;·&nbsp; Outdoor terrace requested &nbsp;·&nbsp; 2 hrs</p></div></li>
+        <li><span class="tl-time">15:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Bus or taxi to Segovia-Guiomar Station</p><p class="tl-note">~15 min — allow plenty of time for the 16:39 train</p></div></li>
+        <li class="hi"><span class="tl-time">16:39</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label"><a href="https://www.renfe.com/en/index.html" target="_blank" rel="noopener">AVE: Segovia → Chamartín</a> <span class="tag tag-ok">Booked</span></p><p class="tl-note">Route <strong>34958</strong> &nbsp;·&nbsp; Arrives Madrid Chamartín 17:06 (27 min)</p></div></li>
+        <li><span class="tl-time">17:06</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Bolt/Uber back to Airbnb</p><p class="tl-note">~20 min from Chamartín to Calle del Espejo</p></div></li>
+        <li><span class="tl-time">17:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">💤 Rest at Airbnb</p><p class="tl-note">~2 hrs before dinner</p></div></li>
+        <li class="eat"><span class="tl-time">20:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Dinner — <a href="https://www.lacasetela.com/" target="_blank" rel="noopener">La Castela</a> <span class="tag tag-ok">Booked 20:00</span></p><p class="tl-note">4 personas &nbsp;·&nbsp; Barra Derecha, Mesa alta &nbsp;·&nbsp; Reserva: Hank Chen &nbsp;·&nbsp; Classic Madrid taberna, great tapas at the bar</p></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="eyebrow">Aug 27</p>
+  <h2 class="section-title">Departure</h2>
+  <div class="card">
+    <div class="card-body">
+      <ul class="tl">
+        <li style="background:#FFF9EC;border-bottom:1px solid #F1C21B44;padding:6px 4px;"><span class="tl-time" style="min-width:40px;font-size:10px;"></span><div class="tl-dot" style="background:#F1C21B;flex-shrink:0;"></div><div class="tl-body"><p class="tl-label" style="font-size:12px;font-weight:400;color:#717171;"><strong style="color:#333;font-weight:700;">☀️ 82°F / 59°F</strong> &nbsp;·&nbsp; Sunny, pleasant departure day</p></div></li>
+        <li><span class="tl-time">09:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Relaxed morning &amp; pack up</p><p class="tl-note">Final coffee, last walk around Sol &nbsp;·&nbsp; ⚠️ Check out by 12:00</p></div></li>
+        <li class="eat"><span class="tl-time">11:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Takeout lunch — <a href="https://www.mercadodesanmiguel.es/" target="_blank" rel="noopener">Mercado de San Miguel</a></p><p class="tl-note">3-min walk from Airbnb &nbsp;·&nbsp; Grab pintxos, bocadillos, or pastries to eat on the go before heading to the airport</p></div></li>
+        <li><span class="tl-time">12:00</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Check out &amp; Bolt/Uber to MAD</p><p class="tl-note">Terminal 4 for AY5369 &nbsp;·&nbsp; ~45 min to airport &nbsp;·&nbsp; Allow buffer for midday traffic</p></div></li>
+        <li class="hi"><span class="tl-time">17:30</span><div class="tl-dot"></div><div class="tl-body"><p class="tl-label">Depart MAD → BOS (AY5369)</p><p class="tl-note">Arrives Boston 19:50</p></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CHECKLIST ═══════════ -->
+<section id="checklist">
+  <p class="eyebrow">Planning</p>
+  <h2 class="section-title">Booking Checklist</h2>
+  <div class="grid2">
+    <div class="info-card">
+      <p class="info-card-label">Already Booked</p>
+      <ul class="checklist">
+        <li><div class="cb on"></div><span class="cl-label"><a href="https://www.parquesdesintra.pt/en/parks-monuments/park-and-national-palace-of-pena/" target="_blank" rel="noopener">Pena Palace</a> — 10:00 &nbsp;·&nbsp; 2× Adult + 2× Youth &nbsp;·&nbsp; FTR 26001/26366</span><span class="cl-status s-ok">Booked</span></li>
+        <li><div class="cb on"></div><span class="cl-label"><a href="https://www.parquesdesintra.pt/en/parks-monuments/moorish-castle/" target="_blank" rel="noopener">Moorish Castle</a> — 2× Adult + 1× Youth &nbsp;·&nbsp; FTR 26001/26366</span><span class="cl-status s-ok">Booked</span></li>
+        <li><div class="cb on"></div><span class="cl-label"><a href="https://www.mosteirojeronimos.gov.pt/en/" target="_blank" rel="noopener">Jerónimos Monastery</a> — 10:30</span><span class="cl-status s-ok">Booked</span></li>
+        <li><div class="cb on"></div><span class="cl-label"><a href="https://entradas.patrimonionacional.es/en-GB/informacion-recinto/6/palacio-real-de-madrid" target="_blank" rel="noopener">Royal Palace Madrid</a></span><span class="cl-status s-ok">Booked</span></li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <p class="info-card-label">Still To Book</p>
+      <ul class="checklist">
+        <li><div class="cb on"></div><span class="cl-label"><a href="https://www.alcazardesegovia.com/en/" target="_blank" rel="noopener">Alcázar de Segovia</a> — entry before 10:30</span><span class="cl-status s-ok">Booked</span></li>
+        <li><div class="cb on"></div><span class="cl-label"><a href="https://www.renfe.com/en/index.html" target="_blank" rel="noopener">Toledo trains</a> — 08292 (09:15 dep) + 08173 (17:23 return)</span><span class="cl-status s-ok">Booked</span></li>
+        <li><div class="cb on"></div><span class="cl-label"><a href="https://www.renfe.com/en/index.html" target="_blank" rel="noopener">Segovia outbound</a> — 34763 (09:25 dep)</span><span class="cl-status s-ok">Booked</span></li>
+        <li><div class="cb on"></div><span class="cl-label"><a href="https://www.renfe.com/en/index.html" target="_blank" rel="noopener">Segovia return</a> — 34958 (16:39 dep, arr 17:06)</span><span class="cl-status s-ok">Booked</span></li>
+        <li><div class="cb pd"></div><span class="cl-label">Verizon Travel Pass — enable before departure</span><span class="cl-status s-pd">Before Aug 18</span></li>
+        <li><div class="cb pd"></div><span class="cl-label">All restaurants</span><span class="cl-status s-pd">Book soon</span></li>
+      </ul>
+    </div>
+  </div>
+  <p class="eyebrow">No prebooking needed</p>
+  <h2 class="section-title">Buy Day-Of</h2>
+  <div class="info-card">
+    <ul class="checklist">
+      <li><div class="cb"></div><span class="cl-label">Lisbon ↔ Sintra train (Rossio Station)</span></li>
+      <li><div class="cb"></div><span class="cl-label">Lisbon ↔ Cascais train (Cais do Sodré)</span></li>
+      <li><div class="cb"></div><span class="cl-label"><a href="https://www.regaleira.pt/en/" target="_blank" rel="noopener">Quinta da Regaleira</a> (optional — decide in Sintra)</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════ LOGISTICS ═══════════ -->
+<section id="logistics">
+  <p class="eyebrow">Getting Around</p>
+  <h2 class="section-title">Transport &amp; Apps</h2>
+  <div class="grid2">
+    <div class="info-card">
+      <p class="info-card-label">Lisbon</p>
+      <div class="info-row"><span class="info-key">Airport</span><span class="info-val">Bolt/Uber</span></div>
+      <div class="info-row"><span class="info-key">Sintra train</span><span class="info-val">Rossio Station</span></div>
+      <div class="info-row"><span class="info-key">Cascais train</span><span class="info-val">Cais do Sodré</span></div>
+      <div class="info-row"><span class="info-key">Belém</span><span class="info-val">Tram 15E</span></div>
+      <div class="info-row"><span class="info-key">Alfama</span><span class="info-val">Tram 28E</span></div>
+    </div>
+    <div class="info-card">
+      <p class="info-card-label">Madrid</p>
+      <div class="info-row"><span class="info-key">Toledo train</span><span class="info-val">Atocha Station</span></div>
+      <div class="info-row"><span class="info-key">Segovia train</span><span class="info-val">Chamartín Station</span></div>
+      <div class="info-row"><span class="info-key">Airport/stations</span><span class="info-val">Bolt/Uber</span></div>
+      <div class="info-row"><span class="info-key">Most sights</span><span class="info-val">Walkable from Airbnb</span></div>
+    </div>
+  </div>
+  <p class="eyebrow">Apps</p>
+  <h2 class="section-title">Download Before You Go</h2>
+  <div class="apps">
+    <span class="app-pill">Bolt</span>
+    <span class="app-pill">Uber</span>
+    <span class="app-pill">Cabify</span>
+    <span class="app-pill">Google Maps</span>
+    <span class="app-pill">CP Portugal</span>
+    <span class="app-pill">Renfe</span>
+    <span class="app-pill">Verizon</span>
+  </div>
+</section>
+
+<div class="end-space"></div>
+
+</body>
+</html>
